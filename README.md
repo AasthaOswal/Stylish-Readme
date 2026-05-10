@@ -30,8 +30,6 @@ Stylish Readme renders widgets as standalone SVGs. Because GitHub natively suppo
   </tr>
 </table>
 
----
-
 ## Widget Documentation & Examples
 
 Copy the markdown snippets below and paste them into your README. You can change the parameters in the URL to customize the data, layout, and colors.
@@ -153,8 +151,6 @@ Customize your URLs by modifying these query strings. Always replace spaces in y
 * `startDate`: Format as YYYY-MM-DD.
 * `unit`: days or weeks.
 * `platform`: leetcode, gfg, hackerrank, codeforces, codechef, atcoder, hackerearth, github, none.
-
----
 
 ## Local Development
 
