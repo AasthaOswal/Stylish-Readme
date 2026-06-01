@@ -177,7 +177,7 @@ npm install
 
 3. Start the local server:
 ```bash
-npm start
+npm start (static preview only — no server.js needed, project is fully serverless)
 ```
 
 The UI workshop will be available at `http://localhost:5000`.
