@@ -12,22 +12,8 @@
     {
       "source": "/api/(time|clock|timezone).svg",
       "headers": [
-<<<<<<< HEAD
         { "key": "Content-Type",                "value": "image/svg+xml; charset=utf-8" },
         { "key": "Cache-Control",               "value": "public, max-age=60, s-maxage=60, stale-while-revalidate=30" },
-=======
-        { "key": "Content-Type",              "value": "image/svg+xml; charset=utf-8" },
-        { "key": "Cache-Control",             "value": "public, max-age=60, s-maxage=60, stale-while-revalidate=30" },
-        { "key": "Vary",                        "value": "Accept-Encoding" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
-      ]
-    },
-    {
-      "source": "/api/(date|quote|streak|profile).svg",
-      "headers": [
-        { "key": "Content-Type",              "value": "image/svg+xml; charset=utf-8" },
-        { "key": "Cache-Control",             "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600" },
->>>>>>> upstream/main
         { "key": "Vary",                        "value": "Accept-Encoding" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
@@ -35,7 +21,6 @@
     {
       "source": "/api/music.svg",
       "headers": [
-<<<<<<< HEAD
         { "key": "Content-Type",                "value": "image/svg+xml; charset=utf-8" },
         { "key": "Cache-Control",               "value": "public, max-age=300, s-maxage=300, stale-while-revalidate=120" },
         { "key": "Vary",                        "value": "Accept-Encoding" },
@@ -47,10 +32,6 @@
       "headers": [
         { "key": "Content-Type",                "value": "image/svg+xml; charset=utf-8" },
         { "key": "Cache-Control",               "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600" },
-=======
-        { "key": "Content-Type",              "value": "image/svg+xml; charset=utf-8" },
-        { "key": "Cache-Control",             "value": "public, max-age=300, s-maxage=300, stale-while-revalidate=120" },
->>>>>>> upstream/main
         { "key": "Vary",                        "value": "Accept-Encoding" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
@@ -58,22 +39,8 @@
     {
       "source": "/api/flag.svg",
       "headers": [
-<<<<<<< HEAD
         { "key": "Content-Type",                "value": "image/svg+xml; charset=utf-8" },
         { "key": "Cache-Control",               "value": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600" },
-=======
-        { "key": "Content-Type",              "value": "image/svg+xml; charset=utf-8" },
-        { "key": "Cache-Control",             "value": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600" },
-        { "key": "Vary",                        "value": "Accept-Encoding" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
-      ]
-    },
-    {
-      "source": "/api/marketplace.svg",
-      "headers": [
-        { "key": "Content-Type",              "value": "image/svg+xml; charset=utf-8" },
-        { "key": "Cache-Control",             "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600" },
->>>>>>> upstream/main
         { "key": "Vary",                        "value": "Accept-Encoding" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
