@@ -861,7 +861,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Custom Label</label>
-          <input class="input-field" value="${state.label}" oninput="setField('label',this.value)" placeholder="e.g. Local Time"/>
+          <input class="input-field" value="${state.label}" oninput="setField('label',this.value,false)" placeholder="e.g. Local Time"/>
         </div>
         <div class="mb-3 space-y-2">
           <label class="flex items-center gap-3 cursor-pointer font-mono text-xs">
@@ -893,7 +893,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Custom Label</label>
-          <input class="input-field" value="${state.label}" oninput="setField('label',this.value)" placeholder="e.g. Today"/>
+          <input class="input-field" value="${state.label}" oninput="setField('label',this.value,false)" placeholder="e.g. Today"/>
         </div>
       `;
     }
@@ -914,7 +914,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Header Label</label>
-          <input class="input-field" value="${state.label}" oninput="setField('label',this.value)" placeholder="e.g. Quote of the Day"/>
+          <input class="input-field" value="${state.label}" oninput="setField('label',this.value,false)" placeholder="e.g. Quote of the Day"/>
         </div>
         <div class="note-box">
           <strong>Note:</strong> A new quote is fetched each day the widget is viewed.
@@ -935,7 +935,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Custom Label</label>
-          <input class="input-field" value="${state.label}" oninput="setField('label',this.value)" placeholder="e.g. Based in"/>
+          <input class="input-field" value="${state.label}" oninput="setField('label',this.value,false)" placeholder="e.g. Based in"/>
         </div>
       `;
     }
@@ -967,7 +967,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Label</label>
-          <input class="input-field" value="${state.customLabel}" oninput="setField('customLabel',this.value)"/>
+          <input class="input-field" value="${state.customLabel}" oninput="setField('customLabel',this.value,false)"/>
         </div>
       `;
     }
@@ -977,7 +977,7 @@
       html += `
         <div class="mb-5">
           <label class="label-tag">Status Label</label>
-          <input class="input-field" value="${state.musicListen}" oninput="setField('musicListen',this.value)" placeholder="e.g. Now Playing"/>
+          <input class="input-field" value="${state.musicListen}" oninput="setField('musicListen',this.value,false)" placeholder="e.g. Now Playing"/>
         </div>
         <div class="mb-5">
           <label class="label-tag">Streaming Platform <span class="opacity-60 normal-case">(optional)</span></label>
@@ -1000,11 +1000,11 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Song Title</label>
-          <input class="input-field" value="${state.musicSong}" oninput="setField('musicSong',this.value)" placeholder="e.g. Blinding Lights"/>
+          <input class="input-field" value="${state.musicSong}" oninput="setField('musicSong',this.value,false)" placeholder="e.g. Blinding Lights"/>
         </div>
         <div class="mb-5">
           <label class="label-tag">Artist Name</label>
-          <input class="input-field" value="${state.musicArtist}" oninput="setField('musicArtist',this.value)" placeholder="e.g. The Weeknd"/>
+          <input class="input-field" value="${state.musicArtist}" oninput="setField('musicArtist',this.value,false)" placeholder="e.g. The Weeknd"/>
         </div>
         <div class="mb-5">
           <label class="label-tag">Theme</label>
@@ -1018,7 +1018,7 @@
       html += `
         <div class="mb-5">
           <label class="label-tag">Avatar Image URL</label>
-          <input id="avatarInput" class="input-field" value="${state.avatar}" oninput="setField('avatar',this.value)" placeholder="https://avatars.githubusercontent.com/u/..."/>
+          <input id="avatarInput" class="input-field" value="${state.avatar}" oninput="setField('avatar',this.value,false)" placeholder="https://avatars.githubusercontent.com/u/..."/>
           <div class="flex items-center gap-2 mt-2 flex-wrap">
             <button type="button" onclick="useGithubAvatar()" class="btn-paper px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest font-bold inline-flex items-center gap-1.5"><i data-lucide="github" class="w-3 h-3"></i>Use GitHub avatar</button>
             <span class="font-mono text-[10px] uppercase tracking-wider text-neutral-600">Auto-fills from your handle</span>
@@ -1026,11 +1026,11 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Name</label>
-          <input class="input-field" value="${state.name}" oninput="setField('name',this.value)" placeholder="Your full name"/>
+          <input class="input-field" value="${state.name}" oninput="setField('name',this.value,false)" placeholder="Your full name"/>
         </div>
         <div class="mb-5">
           <label class="label-tag">Role / Title</label>
-          <input class="input-field" value="${state.role}" oninput="setField('role',this.value)" placeholder="Full-Stack Developer"/>
+          <input class="input-field" value="${state.role}" oninput="setField('role',this.value,false)" placeholder="Full-Stack Developer"/>
         </div>
         <div class="mb-5">
           <label class="label-tag">GitHub Handle <span class="opacity-60 normal-case">(no @)</span></label>
@@ -1039,7 +1039,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Bio <span class="opacity-60 normal-case">(2 lines)</span></label>
-          <textarea class="input-field" rows="2" oninput="setField('bio',this.value)" placeholder="A short introduction.">${state.bio}</textarea>
+          <textarea class="input-field" rows="2" oninput="setField('bio',this.value,false)" placeholder="A short introduction.">${state.bio}</textarea>
         </div>
         <div class="mb-5">
           <label class="label-tag">Skills <span class="opacity-60 normal-case">(pick up to 12)</span></label>
@@ -1064,9 +1064,9 @@
     lucide.createIcons();
   }
 
-  function setField(k,v){
+  function setField(k,v,refreshControls=true){
     state[k]=v;
-    renderControls();
+    if(refreshControls) renderControls();
     renderPreview();
     renderEmbed();
   }
@@ -1556,8 +1556,9 @@
     const handle = v.replace(/^@/,'').trim();
     if(handle && isGithubAvatar(state.avatar)){
       state.avatar = `https://github.com/${encodeURIComponent(handle)}.png`;
+      const avatarInput = $('avatarInput');
+      if(avatarInput) avatarInput.value = state.avatar;
     }
-    renderControls();
     renderPreview();
     renderEmbed();
   }
