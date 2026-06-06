@@ -162,6 +162,16 @@ Combines your avatar, role, bio, skills, and handle into a clean profile header.
 
 <img src="https://readmeme.eu.cc/api/timezone.svg?theme=ink&timezone=Europe/London&timeFormat=24h" alt="Timezone Preview" />
 
+### 7. Event Countdown
+
+```md
+![Hacktoberfest Countdown](https://readmeme.eu.cc/api/countdown.svg?theme=terminal&eventName=Hacktoberfest&targetDate=2026-10-31)
+```
+
+<img src="https://readmeme.eu.cc/api/countdown.svg?theme=terminal&eventName=Hacktoberfest&targetDate=2026-10-31" alt="Countdown Preview" />
+
+
+
 ## Parameter Reference
 
 ### Global Parameters

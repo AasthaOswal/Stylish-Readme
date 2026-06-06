@@ -20,10 +20,11 @@ const CACHE_POLICIES = {
   timezone: 'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
 
   // Daily-change widgets — refresh every hour
-  date:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
-  quote:   'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
-  streak:  'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
-  profile: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  date:      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  quote:     'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  streak:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  profile:   'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  countdown: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
 
   // Static mock content — refresh every 5 minutes
   music: 'public, max-age=300, s-maxage=300, stale-while-revalidate=120',

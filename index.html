@@ -529,7 +529,8 @@
     { id:'timezone',label:'Timezone Banner',  icon:'globe' },
     { id:'streak',  label:'Coding Streak',    icon:'flame' },
     { id:'music',   label:'Now Playing',      icon:'music' },
-    { id:'profile', label:'Profile Card',     icon:'contact' }
+    { id:'profile', label:'Profile Card',     icon:'contact' },
+    { id:'countdown', label:'Event Countdown', icon:'timer' }
   ];
 
   // ----- Skills (24x24 brand-color badges) -----
@@ -776,7 +777,10 @@
     role: 'Full-Stack Developer',
     bio: 'Building cool things with code. Open-source enthusiast.',
     skills: 'HTML,JS,REACT,NODE,PYTHON,GIT,SQL',
-    handle: 'cu-sanjay'
+    handle: 'cu-sanjay',
+
+    eventName: 'Hacktoberfest',
+    targetDate: '2026-10-31'
   };
 
   // ========== UTIL ==========
@@ -1005,6 +1009,22 @@
         <div class="mb-5">
           <label class="label-tag">Artist Name</label>
           <input class="input-field" value="${state.musicArtist}" oninput="setField('musicArtist',this.value,false)" placeholder="e.g. The Weeknd"/>
+        </div>
+        <div class="mb-5">
+          <label class="label-tag">Theme</label>
+          ${themeSwatches()}
+        </div>
+      `;
+    }
+    else if (state.widget==='countdown'){
+      html += `
+        <div class="mb-5">
+          <label class="label-tag">Event Name</label>
+          <input class="input-field" value="${state.eventName}" oninput="setField('eventName',this.value,false)" placeholder="e.g. Hacktoberfest"/>
+        </div>
+        <div class="mb-5">
+          <label class="label-tag">Target Date</label>
+          <input type="date" class="input-field" value="${state.targetDate}" onchange="setField('targetDate',this.value)"/>
         </div>
         <div class="mb-5">
           <label class="label-tag">Theme</label>
@@ -1253,6 +1273,30 @@
       `:''}
     </svg>`;
   }
+  
+  function svgCountdown(){
+    const theme = themeObj(state.theme);
+    const borderStyle = theme.border?`stroke:${theme.fg};stroke-width:2;`:'';
+    const target = new Date(state.targetDate);
+    const now = new Date();
+    const diffMs = target - now;
+    let days = 0, hours = 0;
+    let statusText = "Event has passed! 🎉";
+    if (diffMs > 0) {
+      days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+      statusText = `${days}d ${hours}h remaining`;
+    }
+    const W = 360, H = 110;
+    const eventName = (state.eventName || 'Event').toUpperCase();
+    return `
+    <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace;">
+      <rect x="1" y="1" width="${W-2}" height="${H-2}" fill="${theme.bg}" style="${borderStyle}"/>
+      <text x="20" y="34" fill="${theme.fg}" font-size="9" font-weight="700" letter-spacing="2" opacity="0.65">COUNTDOWN TO</text>
+      <text x="20" y="60" fill="${theme.fg}" font-size="20" font-weight="800" font-family="Fraunces,serif">${eventName}</text>
+      <text x="20" y="92" fill="${theme.fg}" font-size="26" font-weight="700">${statusText}</text>
+    </svg>`;
+  }
 
   function svgMusic(){
     const theme = themeObj(state.theme);
@@ -1376,6 +1420,7 @@
       case 'streak': return svgStreak();
       case 'music': return svgMusic();
       case 'profile': return svgProfile();
+      case 'countdown': return svgCountdown();
     }
     return '';
   }
@@ -1397,7 +1442,8 @@
     timezone: ['timezone','theme','timeFormat'],
     streak:   ['startDate','unit','theme','customLabel','platform'],
     music:    ['musicSong','musicArtist','musicListen','musicPlatform','theme'],
-    profile:  ['avatar','name','role','bio','skills','handle','theme']
+    profile:  ['avatar','name','role','bio','skills','handle','theme'],
+    countdown: ['eventName','targetDate','theme']
   };
   function buildUrl(){
     const protocol = window.location.protocol;
@@ -1470,6 +1516,7 @@
     { title:'India Flag', w:'flag', overrides:{country:'IN',theme:'forest',label:'From'} },
     { title:'Dev Streak · LeetCode', w:'streak', overrides:{theme:'forest',unit:'days',customLabel:'Coding Streak',platform:'leetcode'} },
     { title:'Now Playing · Spotify', w:'music', overrides:{theme:'forest',musicSong:'Anti-Hero',musicArtist:'Taylor Swift',musicPlatform:'spotify',musicListen:'Now Playing'} },
+    { title:'Hacktoberfest', w:'countdown', overrides:{theme:'terminal',eventName:'Hacktoberfest',targetDate:'2026-10-31'} },
     { title:'Profile Card', w:'profile', overrides:{theme:'paper',name:'Sanjay',role:'Full-Stack Developer',bio:'Building cool things with code n coffee.',skills:'HTML,JS,REACT,NODE,PYTHON,GIT,SQL',handle:'cu-sanjay',avatar:'https://pluspng.com/img-png/coder-png-coder-png-file-354.png'} }
   ];
 

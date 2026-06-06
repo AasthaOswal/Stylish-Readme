@@ -112,4 +112,10 @@ describe('renderWidget', () => {
     expect(xml).toContain('Unknown widget: &lt;evil&gt;');
     expect(xml).not.toContain('<evil>');
   });
+
+  test('renders a countdown widget SVG', async () => {
+    const xml = await renderWidget('countdown', { eventName: 'Graduation', targetDate: '2026-05-15' });
+    expect(xml).toContain('COUNTDOWN TO');
+    expect(xml).toContain('GRADUATION');
+  });
 });
