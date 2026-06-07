@@ -18,8 +18,15 @@ const CACHE_POLICIES = {
   time:     'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
   clock:    'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
   timezone: 'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
+  skyline:  'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
 
   // Daily-change widgets — refresh every hour
+  date:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  quote:   'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  streak:  'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  profile: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  marker:  'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  glass:   'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   date:      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   quote:     'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   streak:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',

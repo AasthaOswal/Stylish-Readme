@@ -10,7 +10,7 @@
   ],
   "headers": [
     {
-      "source": "/api/(time|clock|timezone).svg",
+      "source": "/api/(time|clock|timezone|skyline).svg",
       "headers": [
         { "key": "Content-Type",                "value": "image/svg+xml; charset=utf-8" },
         { "key": "Cache-Control",               "value": "public, max-age=60, s-maxage=60, stale-while-revalidate=30" },
@@ -28,6 +28,7 @@
       ]
     },
     {
+      "source": "/api/(date|quote|streak|profile|marketplace|marker|glass).svg",
       "source": "/api/(date|quote|streak|profile|marketplace|countdown).svg",
       "headers": [
         { "key": "Content-Type",                "value": "image/svg+xml; charset=utf-8" },

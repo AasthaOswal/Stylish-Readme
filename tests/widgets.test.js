@@ -113,9 +113,111 @@ describe('renderWidget', () => {
     expect(xml).not.toContain('<evil>');
   });
 
+  test('renders skyline widget in banner style and overrides time correctly', async () => {
+    const xml = await renderWidget('skyline', {
+      skylineStyle: 'banner',
+      time: '680',
+      label: 'Ocean View Test'
+    });
+    expect(xml).toContain('<?xml version="1.0"');
+    expect(xml).toContain('◑ TIDES');
+    expect(xml).toContain('Ocean View Test');
+    expect(xml).toContain('GOLDEN HOUR');
+    expect(xml).toContain('17:14'); // 5 + 0.68 * 18 = 17.24 = 17:14
+  });
+
+  test('renders skyline widget in card style with profile data', async () => {
+    const xml = await renderWidget('skyline', {
+      skylineStyle: 'card',
+      name: 'Skyline Dev',
+      role: 'Backend Architect',
+      bio: 'Procedural graphics designer',
+      skills: 'HTML,CSS,JS,REACT',
+      time: '1000'
+    });
+    expect(xml).toContain('Skyline Dev');
+    expect(xml).toContain('BACKEND ARCHITECT');
+    expect(xml).toContain('Procedural graphics designer');
+    expect(xml).toContain('◆ SKILLS &amp; STACK');
+    expect(xml).toContain('MOONLIT');
+  });
+
+  test('renders marker widget in banner style', async () => {
+    const xml = await renderWidget('marker', {
+      markerStyle: 'banner',
+      markerColor: 'green',
+      label: 'Nice marker highlight'
+    });
+    expect(xml).toContain('<?xml version="1.0"');
+    expect(xml).toContain('Nice marker highlight');
+    expect(xml).toContain('marker-rough');
+    expect(xml).toContain('hsl(66, 45%, 79%)');
+  });
+
+  test('renders marker widget in card style with profile data', async () => {
+    const xml = await renderWidget('marker', {
+      markerStyle: 'card',
+      markerColor: 'purple',
+      name: 'Christian Alder',
+      role: 'Front-End Designer',
+      bio: 'Styling up HTML elements with CSS & SVG filters.',
+      skills: 'HTML,CSS,JS'
+    });
+    expect(xml).toContain('Christian Alder');
+    expect(xml).toContain('FRONT-END DESIGNER');
+    expect(xml).toContain('Styling up HTML elements');
+    expect(xml).toContain('◆ SKILLS &amp; STACK');
+    expect(xml).toContain('marker-rough');
+    expect(xml).toContain('hsl(274, 27%, 88%)');
+  });
+
+  test('renders marker widget in card style with custom HTML highlight tags', async () => {
+    const xml = await renderWidget('marker', {
+      markerStyle: 'card',
+      markerColor: 'purple',
+      name: 'Sanjay',
+      bio: 'I love building <mark color="orange">cool projects</mark> and writing <mark color="cyan">clean code</mark>.',
+      skills: 'HTML,CSS,JS'
+    });
+    expect(xml).toContain('Sanjay');
+    expect(xml).not.toContain('<mark');
+    expect(xml).not.toContain('</mark>');
+    expect(xml).toContain('cool projects');
+    expect(xml).toContain('clean code');
+  });
+
+  test('renders glass widget in banner style', async () => {
+    const xml = await renderWidget('glass', {
+      glassStyle: 'banner',
+      glassColor: 'liquid',
+      label: 'Liquid Glass Test',
+      bio: 'Metaball refraction theme.'
+    });
+    expect(xml).toContain('<?xml version="1.0"');
+    expect(xml).toContain('Liquid Glass Test');
+    expect(xml).toContain('Metaball refraction theme.');
+    expect(xml).toContain('goo_');
+    expect(xml).toContain('refract_');
+  });
+
+  test('renders glass widget in card style with profile data', async () => {
+    const xml = await renderWidget('glass', {
+      glassStyle: 'card',
+      glassColor: 'coral',
+      name: 'Glass Sanjay',
+      role: 'Liquid Developer',
+      bio: 'Gooey glass refraction card.',
+      skills: 'HTML,CSS,JS'
+    });
+    expect(xml).toContain('Glass Sanjay');
+    expect(xml).toContain('LIQUID DEVELOPER');
+    expect(xml).toContain('Gooey glass refraction card.');
+    expect(xml).toContain('◆ SKILLS &amp; STACK');
+    expect(xml).toContain('goo_');
   test('renders a countdown widget SVG', async () => {
     const xml = await renderWidget('countdown', { eventName: 'Graduation', targetDate: '2026-05-15' });
     expect(xml).toContain('COUNTDOWN TO');
     expect(xml).toContain('GRADUATION');
   });
 });
+
