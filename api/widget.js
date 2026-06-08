@@ -2,6 +2,18 @@
 
 const { renderWidget } = require('../lib/widgets');
 
+// ── Avatar URL Validator ─────────────────────────────────────────────────────
+function isValidAvatarUrl(str) {
+  if (!str || typeof str !== 'string' || str.trim() === '') return false;
+  try {
+    const parsed = new URL(str.trim());
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}
+
+const FALLBACK_AVATAR = `data:image/svg+xml;base64,${Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#bdbdbd"/><circle cx="50" cy="36" r="18" fill="#f5f5f5"/><ellipse cx="50" cy="84" rx="27" ry="19" fill="#f5f5f5"/></svg>`).toString('base64')}`;
 /**
  * Cache-Control policy matrix keyed by widget type.
  *
@@ -18,13 +30,28 @@ const CACHE_POLICIES = {
   time:     'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
   clock:    'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
   timezone: 'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
+  skyline:  'public, max-age=60, s-maxage=60, stale-while-revalidate=30',
+
+  // Weather data - refresh every 30 minutes to avoid hitting API rate limits
+  weather:  'public, max-age=1800, s-maxage=1800, stale-while-revalidate=600',
 
   // Daily-change widgets — refresh every hour
+<<<<<<< HEAD
   date:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   quote:   'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   word:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   streak:  'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   profile: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+=======
+  date:      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  quote:     'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  streak:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  profile:   'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  marker:    'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  glass:     'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  countdown: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  marketplace: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+>>>>>>> 4140561cbdc6c521444ae7205935e4a2d5ab9bb7
 
   // Static mock content — refresh every 5 minutes
   music: 'public, max-age=300, s-maxage=300, stale-while-revalidate=120',
@@ -45,12 +72,66 @@ function getCacheHeader(type) {
   return CACHE_POLICIES[(type || '').toLowerCase()] || DEFAULT_CACHE;
 }
 
+// ── Marketplace Handler ──────────────────────────────────────────────────────
+function escXml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+}
+
+const PLATFORMS = {
+  producthunt: { label: 'Product Hunt', color: '#ff6154' },
+  chrome:      { label: 'Chrome',       color: '#4285f4' }
+};
+
+function handleMarketplace(req, res) {
+  const { platform, id } = req.query;
+
+  if (!platform || !id) {
+    return res.status(400).send(`<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="320" height="80"><rect width="320" height="80" rx="12" fill="#1a1a1a"/><text x="20" y="45" font-size="13" fill="#f4f1ea" font-family="monospace">Missing: platform and id are required.</text></svg>`);
+  }
+
+  const platformKey = String(platform || '').toLowerCase();
+  const match = PLATFORMS[platformKey];
+
+  const label = match ? match.label : 'Marketplace';
+  const color = match ? match.color : '#4A90E2';
+
+  const safeId = decodeURIComponent(String(id || '')).slice(0, 40);
+  const title = `${label}: ${escXml(safeId)}`;
+
+  const svg = `
+<svg width="320" height="80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="80" rx="12" fill="${color}"/>
+  <text x="20" y="45" font-size="16" fill="white" font-family="monospace">${title}</text>
+</svg>
+  `;
+
+  return svg;
+}
+
 module.exports = async (req, res) => {
   try {
     const q = req.query || {};
     const type = q.type || 'time';
+    
+    // Handle marketplace separately
+    if (type === 'marketplace') {
+      const marketplaceSvg = handleMarketplace(req, res);
+      res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
+      res.setHeader('Cache-Control', getCacheHeader(type));
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.status(200).send(marketplaceSvg);
+    }
+    
+    // Extract and validate avatar if present
+    const avatar = q.avatar || '';
+    const avatarSrc = isValidAvatarUrl(avatar) ? avatar.trim() : FALLBACK_AVATAR;
+    
+    // Pass avatar to the renderer
+    const queryWithAvatar = { ...q, avatar: avatarSrc };
 
-    const svg = await renderWidget(type, q);
+    const svg = await renderWidget(type, queryWithAvatar);
 
     res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
     res.setHeader('Cache-Control', getCacheHeader(type));

@@ -170,6 +170,36 @@ Combines your avatar, role, bio, skills, and handle into a clean profile header.
 
 <img src="https://readmeme.eu.cc/api/timezone.svg?theme=ink&timezone=Europe/London&timeFormat=24h" alt="Timezone Preview" />
 
+### 7. Time-based Skyline Banner & Profile Card
+
+Procedural sky & ocean widgets that shift color palettes dynamically based on your local time.
+
+#### Skyline Banner (defaults to live local time of timezone)
+
+```md
+![Skyline Banner](https://readmeme.eu.cc/api/skyline.svg?skylineStyle=banner&timezone=Asia/Kolkata&label=◑+TIDES)
+```
+
+<img src="https://readmeme.eu.cc/api/skyline.svg?skylineStyle=banner&time=680&label=◑+TIDES" alt="Skyline Banner Preview" />
+
+#### Skyline Profile Card (with glassmorphism container and skill stack)
+
+```md
+![Skyline Profile Card](https://readmeme.eu.cc/api/skyline.svg?skylineStyle=card&time=1000&name=Alex+Developer&role=Front-End+Explorer&bio=Chasing+sunsets+and+beautiful+code.&skills=HTML%2CCSS%2CJS%2CREACT%2CTAILWIND%2CFIGMA&handle=alexdev&avatar=https%3A%2F%2Fgithub.com%2Fgithub.png)
+```
+
+<img src="https://readmeme.eu.cc/api/skyline.svg?skylineStyle=card&time=1000&name=Alex+Developer&role=Front-End+Explorer&bio=Chasing+sunsets+and+beautiful+code.&skills=HTML%2CCSS%2CJS%2CREACT%2CTAILWIND%2CFIGMA&handle=alexdev&avatar=https%3A%2F%2Fgithub.com%2Fgithub.png" alt="Skyline Profile Card Preview" />
+
+### 8. Event Countdown
+
+```md
+![Hacktoberfest Countdown](https://readmeme.eu.cc/api/countdown.svg?theme=terminal&eventName=Hacktoberfest&targetDate=2026-10-31)
+```
+
+<img src="https://readmeme.eu.cc/api/countdown.svg?theme=terminal&eventName=Hacktoberfest&targetDate=2026-10-31" alt="Countdown Preview" />
+
+
+
 ## Parameter Reference
 
 ### Global Parameters
@@ -179,6 +209,18 @@ Combines your avatar, role, bio, skills, and handle into a clean profile header.
 | `theme`   | classic, paper, terminal, retro, ocean, crimson, forest, ink |
 | `label`   | Custom widget label                                          |
 | `radius`  | Corner roundness (`0` = sharp, `12` = soft)                  |
+
+### Skyline Banner & Card
+
+* `skylineStyle` (`banner` or `card`)
+* `time` (0-24 hour override or 0-1000 slider override; empty for auto)
+* `timezone`
+* `avatar`
+* `name`
+* `role`
+* `bio`
+* `skills`
+* `handle`
 
 ### Profile Card
 
