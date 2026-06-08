@@ -287,7 +287,7 @@
        <div class="grid grid-cols-2 gap-3 text-center">
         <div class="border-2 border-black p-3">
          <div class="font-serif font-black text-3xl" id="statCount">
-          8
+          10
          </div>
          <div class="font-mono text-[10px] uppercase tracking-wider mt-1">
           Widget Types
@@ -525,6 +525,7 @@
     { id:'clock',   label:'Digital Clock',    icon:'watch' },
     { id:'date',    label:'Date Stamp',       icon:'calendar' },
     { id:'quote',   label:'Daily Quote',      icon:'quote' },
+    { id:'word',    label:'Word of the Day',  icon:'book-open' },
     { id:'flag',    label:'Country Flag',     icon:'flag' },
     { id:'timezone',label:'Timezone Banner',  icon:'globe' },
     { id:'streak',  label:'Coding Streak',    icon:'flame' },
@@ -723,6 +724,19 @@
     { q:'Simplicity is the soul of efficiency.', a:'Austin Freeman' }
   ];
 
+  const WORDS = [
+    { word:'Serendipity', pronunciation:'/ser-en-DIP-i-tee/', partOfSpeech:'Noun', definition:'The occurrence of finding something valuable or pleasant by chance.', example:'Meeting my mentor at the conference was pure serendipity.', synonyms:'chance, fortune, luck', origin:'Coined from The Three Princes of Serendip, a tale about accidental discoveries.' },
+    { word:'Eloquent', pronunciation:'/EL-uh-kwent/', partOfSpeech:'Adjective', definition:'Fluent, expressive, and persuasive in speech or writing.', example:'Her eloquent README made the project feel instantly approachable.', synonyms:'expressive, articulate, persuasive', origin:'From Latin eloqui, meaning to speak out.' },
+    { word:'Resilient', pronunciation:'/ri-ZIL-yent/', partOfSpeech:'Adjective', definition:'Able to recover quickly from difficulty or change.', example:'The resilient team shipped a cleaner fix after the outage.', synonyms:'adaptable, tough, flexible', origin:'From Latin resilire, meaning to spring back.' },
+    { word:'Lucid', pronunciation:'/LOO-sid/', partOfSpeech:'Adjective', definition:'Clear, easy to understand, or rational.', example:'A lucid explanation can make complex code feel friendly.', synonyms:'clear, coherent, intelligible', origin:'From Latin lucidus, meaning bright or clear.' },
+    { word:'Meticulous', pronunciation:'/meh-TIK-yuh-lus/', partOfSpeech:'Adjective', definition:'Showing great attention to detail.', example:'The meticulous review caught a subtle accessibility issue.', synonyms:'careful, precise, thorough', origin:'From Latin meticulosus, originally meaning fearful or timid.' },
+    { word:'Ephemeral', pronunciation:'/ih-FEM-er-uhl/', partOfSpeech:'Adjective', definition:'Lasting for a very short time.', example:'The ephemeral preview refreshed as soon as the settings changed.', synonyms:'brief, fleeting, temporary', origin:'From Greek ephemeros, meaning lasting only a day.' },
+    { word:'Pragmatic', pronunciation:'/prag-MAT-ik/', partOfSpeech:'Adjective', definition:'Focused on practical results and real-world usefulness.', example:'A pragmatic design kept the widget simple to customize.', synonyms:'practical, realistic, sensible', origin:'From Greek pragmatikos, meaning fit for action.' },
+    { word:'Tenacious', pronunciation:'/tuh-NAY-shus/', partOfSpeech:'Adjective', definition:'Persistent and determined, especially when facing obstacles.', example:'Her tenacious debugging turned a vague error into a clear fix.', synonyms:'persistent, determined, steadfast', origin:'From Latin tenere, meaning to hold.' },
+    { word:'Nuance', pronunciation:'/NOO-ahns/', partOfSpeech:'Noun', definition:'A subtle difference in meaning, feeling, or expression.', example:'Good documentation captures the nuance behind each option.', synonyms:'subtlety, shade, distinction', origin:'From French nuance, meaning shade or subtle variation.' },
+    { word:'Candid', pronunciation:'/KAN-did/', partOfSpeech:'Adjective', definition:'Truthful, direct, and sincere.', example:'The candid changelog explained both the fix and the tradeoff.', synonyms:'honest, frank, open', origin:'From Latin candidus, meaning white or shining.' }
+  ];
+
   const SONGS = [
     // Bollywood
     { title:'Tum Hi Ho', artist:'Arijit Singh', year:'2013', genre:'Bollywood' },
@@ -757,6 +771,8 @@
     country: 'IN',
     // Quote
     quoteCategory: 'programming',
+    // Word of the day
+    showOrigin: true,
     // Clock style
     clockStyle: 'digital',
     // Streak
@@ -918,6 +934,27 @@
         </div>
         <div class="note-box">
           <strong>Note:</strong> A new quote is fetched each day the widget is viewed.
+        </div>
+      `;
+    }
+    else if (state.widget==='word'){
+      html += `
+        <div class="mb-5">
+          <label class="label-tag">Theme</label>
+          ${themeSwatches()}
+        </div>
+        <div class="mb-5">
+          <label class="label-tag">Header Label</label>
+          <input class="input-field" value="${state.label}" oninput="setField('label',this.value,false)" placeholder="e.g. Word of the Day"/>
+        </div>
+        <div class="mb-3 space-y-2">
+          <label class="flex items-center gap-3 cursor-pointer font-mono text-xs">
+            <input type="checkbox" ${state.showOrigin?'checked':''} onchange="setField('showOrigin',this.checked)" class="w-4 h-4 accent-black"/>
+            <span class="uppercase tracking-wider">Show word origin</span>
+          </label>
+        </div>
+        <div class="note-box">
+          <strong>Note:</strong> A new vocabulary word is selected each day with pronunciation, definition, example, and synonyms.
         </div>
       `;
     }
@@ -1183,6 +1220,58 @@
     </svg>`;
   }
 
+  function wordLines(text, maxLen, maxLines){
+    const words = String(text||'').split(/\s+/).filter(Boolean);
+    const lines=[]; let line='';
+    words.forEach(w=>{
+      if(lines.length>=maxLines) return;
+      if((line+' '+w).trim().length>maxLen){
+        if(line) lines.push(line.trim());
+        line=w;
+      } else {
+        line=(line+' '+w).trim();
+      }
+    });
+    if(line && lines.length<maxLines) lines.push(line.trim());
+    return lines;
+  }
+
+  function wordOfDay(){
+    const dayKey = Math.floor(Date.now()/86400000);
+    return WORDS[dayKey % WORDS.length];
+  }
+
+  function svgWord(){
+    const theme = themeObj(state.theme);
+    const borderStyle = theme.border?`stroke:${theme.fg};stroke-width:2;`:'';
+    const item = wordOfDay();
+    const width=560, height=230;
+    const definition = wordLines(item.definition, 48, 2);
+    const example = wordLines(item.example, 50, 2);
+    const origin = wordLines(item.origin, 48, 2);
+    return `
+    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace;">
+      <rect x="1" y="1" width="${width-2}" height="${height-2}" fill="${theme.bg}" style="${borderStyle}"/>
+      <rect x="18" y="18" width="160" height="${height-36}" fill="${theme.fg}" opacity="0.08"/>
+      <text x="28" y="42" fill="${theme.fg}" font-size="9" font-weight="700" letter-spacing="2.4" opacity="0.65">${(state.label||'WORD OF THE DAY').toUpperCase()}</text>
+      <text x="28" y="86" fill="${theme.fg}" font-size="30" font-weight="800" font-family="Fraunces,serif">${item.word}</text>
+      <text x="30" y="112" fill="${theme.fg}" font-size="12" font-weight="600" opacity="0.78">${item.pronunciation}</text>
+      <rect x="28" y="132" width="112" height="24" fill="none" stroke="${theme.fg}" stroke-width="1.4" opacity="0.5"/>
+      <text x="84" y="148" text-anchor="middle" fill="${theme.fg}" font-size="9" font-weight="800" letter-spacing="1.5">${item.partOfSpeech.toUpperCase()}</text>
+      <line x1="198" y1="24" x2="198" y2="${height-24}" stroke="${theme.fg}" stroke-width="1" opacity="0.22"/>
+      <text x="220" y="38" fill="${theme.fg}" font-size="8" font-weight="800" letter-spacing="2" opacity="0.5">DEFINITION</text>
+      ${definition.map((line,i)=>`<text x="220" y="${60+i*18}" fill="${theme.fg}" font-size="13" font-weight="600" opacity="0.88">${line}</text>`).join('')}
+      <text x="220" y="104" fill="${theme.fg}" font-size="8" font-weight="800" letter-spacing="2" opacity="0.5">EXAMPLE</text>
+      ${example.map((line,i)=>`<text x="220" y="${126+i*18}" fill="${theme.fg}" font-size="12" font-weight="500" font-style="italic" opacity="0.82">${line}</text>`).join('')}
+      <text x="220" y="168" fill="${theme.fg}" font-size="8" font-weight="800" letter-spacing="2" opacity="0.5">SYNONYMS</text>
+      <text x="220" y="190" fill="${theme.fg}" font-size="11" font-weight="700" opacity="0.8">${item.synonyms}</text>
+      ${state.showOrigin?`
+      <text x="358" y="168" fill="${theme.fg}" font-size="8" font-weight="800" letter-spacing="2" opacity="0.5">ORIGIN</text>
+      ${origin.map((line,i)=>`<text x="358" y="${190+i*15}" fill="${theme.fg}" font-size="10" font-weight="500" opacity="0.72">${line}</text>`).join('')}
+      `:''}
+    </svg>`;
+  }
+
   function svgFlag(){
     const theme = themeObj(state.theme);
     const country = COUNTRIES.find(c=>c.code===state.country) || COUNTRIES[0];
@@ -1371,6 +1460,7 @@
       case 'clock': return svgClock();
       case 'date': return svgDate();
       case 'quote': return svgQuote();
+      case 'word': return svgWord();
       case 'flag': return svgFlag();
       case 'timezone': return svgTimezone();
       case 'streak': return svgStreak();
@@ -1393,6 +1483,7 @@
     clock:    ['timezone','theme','timeFormat','showSeconds','label'],
     date:     ['timezone','theme','label'],
     quote:    ['theme','quoteCategory','label'],
+    word:     ['theme','label','showOrigin'],
     flag:     ['country','theme','label'],
     timezone: ['timezone','theme','timeFormat'],
     streak:   ['startDate','unit','theme','customLabel','platform'],
@@ -1465,6 +1556,7 @@
     { title:'Tokyo Time', w:'time', overrides:{timezone:'Asia/Tokyo',theme:'terminal',label:'Tokyo'} },
     { title:'New York Clock', w:'clock', overrides:{timezone:'America/New_York',theme:'paper',label:'Eastern'} },
     { title:'Daily Quote', w:'quote', overrides:{theme:'crimson',label:'Today'} },
+    { title:'Word of the Day', w:'word', overrides:{theme:'paper',label:'Vocabulary',showOrigin:true} },
     { title:'London Date', w:'date', overrides:{theme:'retro',timezone:'Europe/London',label:'Today'} },
     { title:'NYC Timezone', w:'timezone', overrides:{theme:'ocean',timezone:'America/New_York'} },
     { title:'India Flag', w:'flag', overrides:{country:'IN',theme:'forest',label:'From'} },

@@ -21,7 +21,7 @@
       ]
     },
     {
-      "source": "/api/(date|quote|streak|profile).svg",
+      "source": "/api/(date|quote|word|streak|profile).svg",
       "headers": [
         { "key": "Content-Type",              "value": "image/svg+xml; charset=utf-8" },
         { "key": "Cache-Control",             "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600" },
