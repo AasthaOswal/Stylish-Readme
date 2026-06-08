@@ -2,6 +2,19 @@
 
 const { renderWidget } = require('../lib/widgets');
 
+// ── Avatar URL Validator ─────────────────────────────────────────────────────
+function isValidAvatarUrl(str) {
+  if (!str || typeof str !== 'string' || str.trim() === '') return false;
+  try {
+    const parsed = new URL(str.trim());
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch (_) {
+    return false;
+  }
+}
+
+const FALLBACK_AVATAR = `data:image/svg+xml;base64,${Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#bdbdbd"/><circle cx="50" cy="36" r="18" fill="#f5f5f5"/><ellipse cx="50" cy="84" rx="27" ry="19" fill="#f5f5f5"/></svg>`).toString('base64')}`;
+const avatarSrc = isValidAvatarUrl(avatar) ? avatar.trim() : FALLBACK_AVATAR;
 /**
  * Cache-Control policy matrix keyed by widget type.
  *
@@ -72,3 +85,4 @@ module.exports = async (req, res) => {
     res.end(`<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="320" height="60"><rect width="320" height="60" fill="#7f1d1d"/><text x="16" y="36" fill="#fff" font-family="monospace" font-size="12">Render error: ${String(err && err.message || err).replace(/[<>&]/g,'')}</text></svg>`);
   }
 };
+
