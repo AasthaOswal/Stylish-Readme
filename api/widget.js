@@ -50,6 +50,7 @@ const CACHE_POLICIES = {
 
   // Fully static content — refresh every 24 hours
   flag: 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600',
+  techstack: 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600',
 };
 
 /** Default fallback for any future widget types not yet in CACHE_POLICIES. */
