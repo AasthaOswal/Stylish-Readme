@@ -44,6 +44,7 @@ const CACHE_POLICIES = {
   glass:     'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   countdown: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
   marketplace: 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
+  youtube:     'public, max-age=3600, s-maxage=3600, stale-while-revalidate=600',
 
   // Static mock content — refresh every 5 minutes
   music: 'public, max-age=300, s-maxage=300, stale-while-revalidate=120',
