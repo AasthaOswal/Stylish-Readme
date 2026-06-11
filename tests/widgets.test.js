@@ -234,5 +234,48 @@ describe('renderWidget', () => {
     expect(xml).toContain('Rick Astley');
     expect(xml).toContain('image href="data:image/');
   });
+
+  test('renders progress widget SVG with default values', async () => {
+    const xml = await renderWidget('progress', {});
+    expect(xml).toContain('<?xml version="1.0"');
+    expect(xml).toContain('Progress');
+    expect(xml).toContain('0 / 100 %');
+  });
+
+  test('renders progress widget with parameter truncation & validation', async () => {
+    const longTitle = 'A'.repeat(50);
+    const longUnit = 'B'.repeat(20);
+    const xml = await renderWidget('progress', {
+      title: longTitle,
+      unit: longUnit,
+      current: '120',
+      target: '100',
+      style: 'invalid-style'
+    });
+    // title truncated to 24
+    expect(xml).toContain('A'.repeat(24));
+    expect(xml).not.toContain('A'.repeat(25));
+    // unit truncated to 10
+    expect(xml).toContain('B'.repeat(10));
+    expect(xml).not.toContain('B'.repeat(11));
+    // clamped percentage at 100%
+    expect(xml).toContain('120 / 100');
+    expect(xml).toContain('(100%)');
+    // style invalid falls back to solid (so no gradient or segmented render)
+    expect(xml).not.toContain('linearGradient');
+  });
+
+  test('renders progress widget with gradient and segmented styles', async () => {
+    const gradientXml = await renderWidget('progress', { style: 'gradient' });
+    expect(gradientXml).toContain('gradProgress');
+
+    const segmentedXml = await renderWidget('progress', { style: 'segmented', current: '50', target: '100' });
+    expect(segmentedXml).toContain('rect');
+  });
+
+  test('renders progress widget with custom color override', async () => {
+    const xml = await renderWidget('progress', { progressColor: '#ff0055' });
+    expect(xml).toContain('#ff0055');
+  });
 });
 

@@ -833,6 +833,11 @@
 
   // ========== UTIL ==========
   function $(id){return document.getElementById(id);}
+  function escXml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+  }
   function scrollToId(id){ const el=$(id); if(el){el.scrollIntoView({behavior:'smooth',block:'start'});} }
   function pad(n){return String(n).padStart(2,'0');}
   function getTzTime(tz){
@@ -1446,21 +1451,21 @@
       html += `
         <div class="mb-5">
           <label class="label-tag">Title</label>
-          <input type="text" class="input-flat w-full" value="${escXml(state.title)}" onchange="setField('title',this.value)" placeholder="e.g. Coding Journey" />
+          <input type="text" class="input-field w-full" value="${escXml(state.title)}" onchange="setField('title',this.value)" placeholder="e.g. Coding Journey" />
         </div>
         <div class="grid grid-cols-2 gap-4 mb-5">
           <div>
             <label class="label-tag">Current Value</label>
-            <input type="number" class="input-flat w-full" value="${escXml(state.current)}" onchange="setField('current',this.value)" />
+            <input type="number" class="input-field w-full" value="${escXml(state.current)}" onchange="setField('current',this.value)" />
           </div>
           <div>
             <label class="label-tag">Target Value</label>
-            <input type="number" class="input-flat w-full" value="${escXml(state.target)}" onchange="setField('target',this.value)" />
+            <input type="number" class="input-field w-full" value="${escXml(state.target)}" onchange="setField('target',this.value)" />
           </div>
         </div>
         <div class="mb-5">
           <label class="label-tag">Unit</label>
-          <input type="text" class="input-flat w-full" value="${escXml(state.unit)}" onchange="setField('unit',this.value)" placeholder="e.g. % or days" />
+          <input type="text" class="input-field w-full" value="${escXml(state.unit)}" onchange="setField('unit',this.value)" placeholder="e.g. % or days" />
         </div>
         <div class="mb-5">
           <label class="label-tag">Progress Style</label>
@@ -1472,7 +1477,7 @@
         </div>
         <div class="mb-5">
           <label class="label-tag">Custom Progress Color (Hex)</label>
-          <input type="text" class="input-flat w-full" value="${escXml(state.progressColor)}" onchange="setField('progressColor',this.value)" placeholder="#FF0000" />
+          <input type="text" class="input-field w-full" value="${escXml(state.progressColor)}" onchange="setField('progressColor',this.value)" placeholder="#FF0000" />
           <p class="font-mono text-[10px] text-neutral-500 mt-1">Leave empty to use theme default.</p>
         </div>
       `;
