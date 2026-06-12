@@ -1480,6 +1480,10 @@
           <input type="text" class="input-field w-full" value="${escXml(state.progressColor)}" onchange="setField('progressColor',this.value)" placeholder="#FF0000" />
           <p class="font-mono text-[10px] text-neutral-500 mt-1">Leave empty to use theme default.</p>
         </div>
+        <div class="mb-5">
+          <label class="label-tag">Theme</label>
+          ${themeSwatches()}
+        </div>
       `;
     }
     area.innerHTML = html;
