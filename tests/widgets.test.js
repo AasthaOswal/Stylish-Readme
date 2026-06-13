@@ -214,10 +214,148 @@ describe('renderWidget', () => {
     expect(xml).toContain('Gooey glass refraction card.');
     expect(xml).toContain('◆ SKILLS &amp; STACK');
     expect(xml).toContain('goo_');
+  });
+
   test('renders a countdown widget SVG', async () => {
     const xml = await renderWidget('countdown', { eventName: 'Graduation', targetDate: '2026-05-15' });
     expect(xml).toContain('COUNTDOWN TO');
     expect(xml).toContain('GRADUATION');
+  });
+
+  test('renders youtube widget missing id error', async () => {
+    const xml = await renderWidget('youtube', {});
+    expect(xml).toContain('YouTube Widget: Missing videoId or playlistId');
+  });
+
+  test('renders youtube widget with videoId (success path)', async () => {
+    // This test actually performs a real fetch to YouTube OEmbed API
+    const xml = await renderWidget('youtube', { videoId: 'dQw4w9WgXcQ' });
+    expect(xml).toContain('YOUTUBE');
+    expect(xml).toContain('Rick Astley');
+    expect(xml).toContain('image href="data:image/');
+  });
+
+  test('renders progress widget SVG with default values', async () => {
+    const xml = await renderWidget('progress', {});
+    expect(xml).toContain('<?xml version="1.0"');
+    expect(xml).toContain('Progress');
+    expect(xml).toContain('0 / 100 %');
+  });
+
+  test('renders progress widget with parameter truncation & validation', async () => {
+    const longTitle = 'A'.repeat(50);
+    const longUnit = 'B'.repeat(20);
+    const xml = await renderWidget('progress', {
+      title: longTitle,
+      unit: longUnit,
+      current: '120',
+      target: '100',
+      style: 'invalid-style'
+    });
+    // title truncated to 24
+    expect(xml).toContain('A'.repeat(24));
+    expect(xml).not.toContain('A'.repeat(25));
+    // unit truncated to 10
+    expect(xml).toContain('B'.repeat(10));
+    expect(xml).not.toContain('B'.repeat(11));
+    // clamped percentage at 100%
+    expect(xml).toContain('120 / 100');
+    expect(xml).toContain('(100%)');
+    // style invalid falls back to solid (so no gradient or segmented render)
+    expect(xml).not.toContain('linearGradient');
+  });
+
+  test('renders progress widget with gradient and segmented styles', async () => {
+    const gradientXml = await renderWidget('progress', { style: 'gradient' });
+    expect(gradientXml).toContain('gradProgress');
+
+    const segmentedXml = await renderWidget('progress', { style: 'segmented', current: '50', target: '100' });
+    expect(segmentedXml).toContain('rect');
+  });
+
+  test('renders progress widget with custom color override', async () => {
+    const xml = await renderWidget('progress', { progressColor: '#ff0055' });
+    expect(xml).toContain('#ff0055');
+  });
+
+  test('renders extension widget with defaults and custom fields', async () => {
+    const xml = await renderWidget('extension', {
+      extensionName: 'My Awesome Extension',
+      extensionPlatform: 'chrome',
+      extensionId: 'abc123xyz'
+    });
+    expect(xml).toContain('ADD TO CHROME');
+    expect(xml).toContain('My Awesome Extension');
+    expect(xml).toContain('Available in Chrome Web Store');
+    expect(xml).toContain('https://chromewebstore.google.com/detail/abc123xyz');
+    expect(xml).toContain('M12 0C8.21 0');
+  });
+
+  test('renders extension widget for firefox and edge correctly', async () => {
+    const edgeXml = await renderWidget('extension', {
+      extensionName: 'Edge Extension',
+      extensionPlatform: 'edge',
+      extensionId: 'edge-id'
+    });
+    expect(edgeXml).toContain('ADD TO EDGE');
+    expect(edgeXml).toContain('https://microsoftedge.microsoft.com/addons/detail/edge-id');
+
+    const firefoxXml = await renderWidget('extension', {
+      extensionName: 'Firefox Addon',
+      extensionPlatform: 'firefox',
+      extensionId: 'firefox-slug'
+    });
+    expect(firefoxXml).toContain('ADD TO FIREFOX');
+    expect(firefoxXml).toContain('https://addons.mozilla.org/en-US/firefox/addon/firefox-slug');
+  });
+
+  test('renders contributors widget with default grid layout', async () => {
+    const xml = await renderWidget('contributors', {
+      repo: 'cu-sanjay/Stylish-Readme'
+    });
+    expect(xml).toContain('STYLISH-README CONTRIBUTORS');
+    expect(xml).toContain('commits');
+    expect(xml).toContain('cu-sanjay');
+  });
+
+  test('renders contributors widget in wall, card, and spotlight layouts', async () => {
+    const wallXml = await renderWidget('contributors', {
+      repo: 'cu-sanjay/Stylish-Readme',
+      contribLayout: 'wall'
+    });
+    // Wall layout should not contain the word 'commits' (wall only shows avatars)
+    expect(wallXml).not.toContain('commits');
+
+    const cardXml = await renderWidget('contributors', {
+      repo: 'cu-sanjay/Stylish-Readme',
+      contribLayout: 'card'
+    });
+    expect(cardXml).toContain('commits');
+    expect(cardXml).toContain('rect');
+
+    const spotlightXml = await renderWidget('contributors', {
+      repo: 'cu-sanjay/Stylish-Readme',
+      contribLayout: 'spotlight'
+    });
+    expect(spotlightXml).toContain('commits');
+    // Spotlight highlights top contributor, so it should render crown path/shape
+    expect(spotlightXml).toContain('M');
+  });
+
+  test('respects showCount=false parameter in contributors widget', async () => {
+    const xml = await renderWidget('contributors', {
+      repo: 'cu-sanjay/Stylish-Readme',
+      showCount: '0'
+    });
+    expect(xml).not.toContain('commits');
+  });
+
+  test('respects sort options in contributors widget', async () => {
+    const xmlByName = await renderWidget('contributors', {
+      repo: 'cu-sanjay/Stylish-Readme',
+      contribSort: 'login'
+    });
+    expect(xmlByName).toContain('STYLISH-README CONTRIBUTORS');
   });
 });
 

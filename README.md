@@ -59,6 +59,28 @@ Stylish Readme renders widgets as standalone SVG images. Since GitHub supports S
       Activity tracking
     </td>
   </tr>
+  <tr>
+    <td align="center">
+      <img src="https://img.icons8.com/fluency/30/youtube-play.png" alt="YouTube Icon"/><br>
+      <strong>YouTube</strong><br>
+      Video showcase
+    </td>
+    <td align="center">
+      <img src="https://img.icons8.com/fluency/30/cloud.png" alt="Weather Icon"/><br>
+      <strong>Weather</strong><br>
+      Live conditions
+    </td>
+    <td align="center">
+      <img src="https://img.icons8.com/fluency/30/timer.png" alt="Countdown Icon"/><br>
+      <strong>Countdown</strong><br>
+      Event tracking
+    </td>
+    <td align="center">
+      <img src="https://img.icons8.com/fluency/30/highlighter.png" alt="Marker Icon"/><br>
+      <strong>Marker Board</strong><br>
+      Sketched bios
+    </td>
+  </tr>
 </table>
 
 ## Features
@@ -148,7 +170,15 @@ Combines your avatar, role, bio, skills, and handle into a clean profile header.
 
 <img src="https://readmeme.eu.cc/api/quote.svg?theme=ocean&quoteCategory=programming&label=Daily+Wisdom" alt="Quote Preview" />
 
-### 6. Location & Timezone
+### 6. Word of the Day
+
+```md
+![Word of the Day](https://readmeme.eu.cc/api/word.svg?theme=paper&label=Vocabulary&showOrigin=1)
+```
+
+<img src="https://readmeme.eu.cc/api/word.svg?theme=paper&label=Vocabulary&showOrigin=1" alt="Word of the Day Preview" />
+
+### 7. Location & Timezone
 
 ```md
 ![Country Flag](https://readmeme.eu.cc/api/flag.svg?theme=forest&country=JP&label=Based+In)
@@ -189,6 +219,25 @@ Procedural sky & ocean widgets that shift color palettes dynamically based on yo
 ```
 
 <img src="https://readmeme.eu.cc/api/countdown.svg?theme=terminal&eventName=Hacktoberfest&targetDate=2026-10-31" alt="Countdown Preview" />
+
+### 9. YouTube Video Preview
+
+#### Single Video Mode
+
+```md
+![YouTube Single](https://readmeme.eu.cc/api/youtube.svg?videoId=dQw4w9WgXcQ&theme=classic)
+```
+
+<img src="https://readmeme.eu.cc/api/youtube.svg?videoId=dQw4w9WgXcQ&theme=classic" alt="YouTube Single Preview" />
+
+#### Multiple Videos Mode
+
+```md
+![YouTube Multiple](https://readmeme.eu.cc/api/youtube.svg?youtubeMode=multiple&videoIds=dQw4w9WgXcQ,yPYZpwvlWmc,jNQXAC9IVRw&theme=ocean)
+```
+
+<img src="https://readmeme.eu.cc/api/youtube.svg?youtubeMode=multiple&videoIds=dQw4w9WgXcQ,yPYZpwvlWmc,jNQXAC9IVRw&theme=ocean" alt="YouTube Multiple Preview" />
+
 
 
 
@@ -243,6 +292,10 @@ Procedural sky & ocean widgets that shift color palettes dynamically based on yo
 * `startDate`
 * `unit`
 * `platform`
+
+### Word of the Day
+
+* `showOrigin`
 
 ## Local Development
 
